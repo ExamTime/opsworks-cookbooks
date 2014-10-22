@@ -1,7 +1,7 @@
 require 'resolv'
 include_recipe 'deploy'
 
-Chef::Log.info "Nginx configuration deployed"
+Chef::Log.info "Mysql deployment"
 node[:deploy].each do |application, deploy|
 #next if deploy[:database].nil? || deploy[:database].empty?
 
