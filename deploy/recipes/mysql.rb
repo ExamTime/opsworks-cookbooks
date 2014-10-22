@@ -1,12 +1,14 @@
 require 'resolv'
 include_recipe 'deploy'
 
+Chef::Log.info "Nginx configuration deployed"
 node[:deploy].each do |application, deploy|
-  next if deploy[:database].nil? || deploy[:database].empty?
+#next if deploy[:database].nil? || deploy[:database].empty?
 
   mysql_command = "/usr/bin/mysql -u #{deploy[:database][:username]} #{node[:mysql][:server_root_password].blank? ? '' : "-p#{node[:mysql][:server_root_password]}"}"
-
++*856------------------------------------
   execute "create mysql database" do
+     Chef::Log.info "Creating mysql database"
     command "#{mysql_command} -e 'CREATE DATABASE `#{deploy[:database][:database]}`' "
     action :run
 
@@ -40,6 +42,7 @@ node[:deploy].each do |application, deploy|
   end
 
   execute 'create grants' do
+     Chef::Log.info "Creating grants"
     command "#{mysql_command} < /tmp/grants.sql"
   end
 end
