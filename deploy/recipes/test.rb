@@ -8,11 +8,11 @@ node[:deploy].each do |application, deploy|
   mysql_command = "/usr/bin/mysql -u root #{node[:mysql][:server_root_password].blank? ? '' : "-p#{node[:mysql][:server_root_password]}"}"
   execute "create mysql database" do
      Chef::Log.info "Creating mysql database"
-    command "#{mysql_command} -e 'CREATE DATABASE `#{deploy[:database][:database]}`' "
+    command "#{mysql_command} -e 'CREATE DATABASE `#{deploy[:database][:db]}`' "
     action :run
 
     not_if do
-      system("#{mysql_command} -e 'SHOW DATABASES' | egrep -e '^#{deploy[:database][:database]}$'")
+      system("#{mysql_command} -e 'SHOW DATABASES' | egrep -e '^#{deploy[:database][:db]}$'")
     end
   end
 
