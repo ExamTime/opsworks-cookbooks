@@ -6,7 +6,6 @@ node[:deploy].each do |application, deploy|
 #next if deploy[:database].nil? || deploy[:database].empty?
 
   mysql_command = "/usr/bin/mysql -u #{deploy[:database][:username]} #{node[:mysql][:server_root_password].blank? ? '' : "-p#{node[:mysql][:server_root_password]}"}"
-+*856------------------------------------
   execute "create mysql database" do
      Chef::Log.info "Creating mysql database"
     command "#{mysql_command} -e 'CREATE DATABASE `#{deploy[:database][:database]}`' "
