@@ -5,7 +5,7 @@ Chef::Log.info "Mysql deployment"
 node[:deploy].each do |application, deploy|
 #next if deploy[:database].nil? || deploy[:database].empty?
 
-  mysql_command = "/usr/bin/mysql -u #{deploy[:database][:username]} #{node[:mysql][:server_root_password].blank? ? '' : "-p#{node[:mysql][:server_root_password]}"}"
+  mysql_command = "/usr/bin/mysql -u root #{node[:mysql][:server_root_password].blank? ? '' : "-p#{node[:mysql][:server_root_password]}"}"
   execute "create mysql database" do
      Chef::Log.info "Creating mysql database"
     command "#{mysql_command} -e 'CREATE DATABASE `#{deploy[:database][:database]}`' "
@@ -35,7 +35,7 @@ node[:deploy].each do |application, deploy|
     owner 'root'
     group 'root'
     mode '0600'
-    variables :hosts => [], :settings => deploy[:database], :stack_clients => node[:mysql][:clients].select{|private_ip| Resolv.getaddress(private_ip) }
+    variables :username => deploy[:database][:username],:hosts => [], :settings => deploy[:database], :stack_clients => node[:mysql][:clients].select{|private_ip| Resolv.getaddress(private_ip) }
     cookbook "mysql"
     action :create
   end
