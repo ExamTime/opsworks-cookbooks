@@ -34,15 +34,15 @@ deny all;',
     end
   end
 
-  template "/etc/nginx/servers/examtime/custom.ssl.conf" do
-    owner "deploy"
-    group "deploy"
-    mode 0644
-    source "custom.erb"
+template "/etc/nginx/servers/examtime/custom.ssl.conf" do
+  owner "deploy"
+  group "deploy"
+  mode 0644
+  source "custom.erb"
 #    if node[:environment][:name]!='production'
-    if deploy[application][:environment]!='production'
-      variables({
-         :allowed_ips => 'satisfy any; 
+  if deploy[application][:environment]!='production'
+    variables({
+      :allowed_ips => 'satisfy any; 
 allow 54.192.0.0/16; 
 allow 54.230.0.0/16; 
 allow 54.239.128.0/18; 
@@ -59,61 +59,61 @@ allow 205.251.252.0/23;
 allow 205.251.254.0/24; 
 allow 216.137.32.0/19; 
 deny all;',
-        :auth_basic => 'auth_basic "ExamTime integration - Company Confidential - this site is restricted to ExamTime staff only";',
-	:auth_basic_user_file => "auth_basic_user_file /data/nginx/servers/examtime/examtime.users;",
+      :auth_basic => 'auth_basic "ExamTime integration - Company Confidential - this site is restricted to ExamTime staff only";',
+      :auth_basic_user_file => "auth_basic_user_file /data/nginx/servers/examtime/examtime.users;",
       })
-    end
   end
+end
 
-  remote_file "/etc/nginx/common/proxy.conf" do
-    owner "deploy"
-    group "deploy"
-    mode 0644
-    source "proxy.conf"
-    backup false
-    action :create
-  end
-
-
-  remote_file "/etc/nginx/http-custom.conf" do
-    owner "deploy"
-    group "deploy"
-    mode 0644
-    source "http-custom.conf"
-    backup false
-    action :create
-  end
+remote_file "/etc/nginx/common/proxy.conf" do
+  owner "deploy"
+  group "deploy"
+  mode 0644
+  source "proxy.conf"
+  backup false
+  action :create
+end
 
 
-  src_filename1 = "GeoIP.dat.gz"
-  src_filename2 = "GeoLiteCity.dat.gz"
-  src_filepath = "/etc/nginx"
+remote_file "/etc/nginx/http-custom.conf" do
+  owner "deploy"
+  group "deploy"
+  mode 0644
+  source "http-custom.conf"
+  backup false
+  action :create
+end
 
 
-  remote_file "#{src_filepath}/#{src_filename1}" do
-    owner "deploy"
-    group "deploy"
-    mode 0644
-    source "#{src_filename1}"
-  end
+src_filename1 = "GeoIP.dat.gz"
+src_filename2 = "GeoLiteCity.dat.gz"
+src_filepath = "/etc/nginx"
 
-  remote_file "#{src_filepath}/#{src_filename2}" do
-    owner "deploy"
-    group "deploy"
-    mode 0644
-    source "#{src_filename2}"
-  end
 
-  bash 'extract_module' do
-    cwd ::File.dirname(src_filepath)
-    code <<-EOH
+remote_file "#{src_filepath}/#{src_filename1}" do
+  owner "deploy"
+  group "deploy"
+  mode 0644
+  source "#{src_filename1}"
+end
+
+remote_file "#{src_filepath}/#{src_filename2}" do
+  owner "deploy"
+  group "deploy"
+  mode 0644
+  source "#{src_filename2}"
+end
+
+bash 'extract_module' do
+  cwd ::File.dirname(src_filepath)
+  code <<-EOH
       gunzip -f #{src_filepath}/#{src_filename1}
       gunzip -f #{src_filepath}/#{src_filename2}
 
-    EOH
+  EOH
 #    not_if { ::File.exists?(#{src_filename1}) }
      
-  end
+end
 # Restart nginx
 
   # execute "Restart nginx" do
@@ -121,14 +121,13 @@ deny all;',
   #       /etc/init.d/nginx restart
   #     }
   # end
-  service "nginx" do
-    action [ :restart ]
-  end
+service "nginx" do
+  action [ :restart ]
+end
 
   
-  Chef::Log.info "Nginx configuration deployed"
+Chef::Log.info "Nginx configuration deployed"
 
-end
 
 ey_cloud_report "nginx_config" do
   message "Nginx configuration deployed"
