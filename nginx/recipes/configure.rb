@@ -8,7 +8,7 @@ template "/etc/nginx/servers/examtime/custom.conf" do
   mode 0644
   source "custom.erb"
 #  if node[:environment][:name]!='production'
-  if node[:deploy][application][:environment]!='production'
+  if node[:deploy][application]='production'
     variables({
         :allowed_ips => 'satisfy any;
 allow 54.192.0.0/16; 
