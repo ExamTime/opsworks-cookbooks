@@ -3,8 +3,8 @@ include_recipe "nginx::service"
 #if %( app_master app solo ).include?(node[:instance_role])
 
 template "/etc/nginx/servers/examtime/custom.conf" do
-  owner "deploy"
-  group "deploy"
+  owner deploy[:user]
+  group deploy[:group]
   mode 0644
   source "custom.erb"
 #  if node[:environment][:name]!='production'
@@ -35,8 +35,8 @@ deny all;',
   end
 
 template "/etc/nginx/servers/examtime/custom.ssl.conf" do
-  owner "deploy"
-  group "deploy"
+  owner deploy[:user]
+  group deploy[:group]
   mode 0644
   source "custom.erb"
 #    if node[:environment][:name]!='production'
@@ -66,8 +66,8 @@ deny all;',
 end
 
 cookbook_file "/etc/nginx/common/proxy.conf" do
-  owner "deploy"
-  group "deploy"
+  owner deploy[:user]
+  group deploy[:group]
   mode 0644
   source 'proxy.conf'
   backup false
@@ -76,8 +76,8 @@ end
 
 
 cookbook_file "/etc/nginx/http-custom.conf" do
-  owner "deploy"
-  group "deploy"
+  owner deploy[:user]
+  group deploy[:group]
   mode 0644
   source "http-custom.conf"
   backup false
@@ -91,15 +91,15 @@ src_filepath = "/etc/nginx"
 
 
 cookbook_file "#{src_filepath}/#{src_filename1}" do
-  owner "deploy"
-  group "deploy"
+  owner deploy[:user]
+  group deploy[:group]
   mode 0644
   source "#{src_filename1}"
 end
 
 cookbook_file "#{src_filepath}/#{src_filename2}" do
-  owner "deploy"
-  group "deploy"
+  owner deploy[:user]
+  group deploy[:group]
   mode 0644
   source "#{src_filename2}"
 end
