@@ -69,7 +69,7 @@ remote_file "/etc/nginx/common/proxy.conf" do
   owner "deploy"
   group "deploy"
   mode 0644
-  source "proxy.conf"
+  source 'proxy.conf'
   backup false
   action :create
 end
