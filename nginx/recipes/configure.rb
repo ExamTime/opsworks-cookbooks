@@ -65,7 +65,7 @@ deny all;',
   end
 end
 
-remote_file "/etc/nginx/common/proxy.conf" do
+cookbook_file "/etc/nginx/common/proxy.conf" do
   owner "deploy"
   group "deploy"
   mode 0644
@@ -75,7 +75,7 @@ remote_file "/etc/nginx/common/proxy.conf" do
 end
 
 
-remote_file "/etc/nginx/http-custom.conf" do
+cookbook_file "/etc/nginx/http-custom.conf" do
   owner "deploy"
   group "deploy"
   mode 0644
@@ -90,14 +90,14 @@ src_filename2 = "GeoLiteCity.dat.gz"
 src_filepath = "/etc/nginx"
 
 
-remote_file "#{src_filepath}/#{src_filename1}" do
+cookbook_file "#{src_filepath}/#{src_filename1}" do
   owner "deploy"
   group "deploy"
   mode 0644
   source "#{src_filename1}"
 end
 
-remote_file "#{src_filepath}/#{src_filename2}" do
+cookbook_file "#{src_filepath}/#{src_filename2}" do
   owner "deploy"
   group "deploy"
   mode 0644
