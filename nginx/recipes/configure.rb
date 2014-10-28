@@ -3,8 +3,8 @@ include_recipe "nginx::service"
 #if %( app_master app solo ).include?(node[:instance_role])
 
 template "/etc/nginx/servers/examtime/custom.conf" do
-  owner deploy[:user]
-  group deploy[:group]
+#  owner deploy[:user]
+#  group deploy[:group]
   mode 0644
   source "custom.erb"
 #  if node[:environment][:name]!='production'
@@ -35,8 +35,8 @@ deny all;',
   end
 
 template "/etc/nginx/servers/examtime/custom.ssl.conf" do
-  owner deploy[:user]
-  group deploy[:group]
+#  owner deploy[:user]
+#  group deploy[:group]
   mode 0644
   source "custom.erb"
 #    if node[:environment][:name]!='production'
