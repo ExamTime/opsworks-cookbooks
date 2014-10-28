@@ -128,8 +128,3 @@ end
   
 Chef::Log.info "Nginx configuration deployed"
 
-
-ey_cloud_report "nginx_config" do
-  message "Nginx configuration deployed"
-end
-
