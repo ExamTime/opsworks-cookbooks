@@ -1,8 +1,9 @@
 include_recipe "nginx::service"
 
+config_path="/etc/nginx/conf.d"
 #if %( app_master app solo ).include?(node[:instance_role])
 
-template "/etc/nginx/servers/examtime/custom.conf" do
+template "#{config_path}/custom.conf" do
 #  owner deploy[:user]
 #  group deploy[:group]
   mode 0644
@@ -34,7 +35,7 @@ deny all;',
     end
   end
 
-template "/etc/nginx/servers/examtime/custom.ssl.conf" do
+template "#{config_path}/custom.ssl.conf" do
 #  owner deploy[:user]
 #  group deploy[:group]
   mode 0644
@@ -60,12 +61,33 @@ allow 205.251.254.0/24;
 allow 216.137.32.0/19; 
 deny all;',
       :auth_basic => 'auth_basic "ExamTime integration - Company Confidential - this site is restricted to ExamTime staff only";',
-      :auth_basic_user_file => "auth_basic_user_file /data/nginx/servers/examtime/examtime.users;",
+      :auth_basic_user_file => "auth_basic_user_file /data/nginx/conf.d/examtime.users;",
       })
   end
 end
 
-cookbook_file "/etc/nginx/common/proxy.conf" do
+# template "#{config_path}/examtime.conf" do
+# #  owner deploy[:user]
+# #  group deploy[:group]
+#   mode 0644
+#   source ""
+#   variables({
+#     :
+#             })
+# end
+
+# template "#{config_path}/examtimessl.conf" do
+# #  owner deploy[:user]
+# #  group deploy[:group]
+#   mode 0644
+#   source ""
+#   backup false
+#   action :create
+# end
+
+
+
+cookbook_file "#{config_path}/proxy.conf" do
 #  owner deploy[:user]
 #  group deploy[:group]
   mode 0644
@@ -75,7 +97,7 @@ cookbook_file "/etc/nginx/common/proxy.conf" do
 end
 
 
-cookbook_file "/etc/nginx/http-custom.conf" do
+cookbook_file "#{config_path}/http-custom.conf" do
 #  owner deploy[:user]
 #  group deploy[:group]
   mode 0644

@@ -1,0 +1,18 @@
+check process unicorn_master_examtime
+  with pidfile /var/run/engineyard/unicorn_examtime.pid
+  start program = "/bin/bash -c '/engineyard/bin/app_examtime start'"
+    as uid deploy and gid deploy
+    stop program = "/bin/bash -c '/engineyard/bin/app_examtime stop'"
+    as uid deploy and gid deploy
+  if mem > <%= @max_mem %> MB for 2 cycles then restart
+  if cpu > 100% for 2 cycles then restart
+  group unicorn_examtime
+
+
+<% @workers_count.times do |i| %>
+  check process unicorn_examtime_worker<%= i %>
+  with pidfile /var/run/engineyard/unicorn_worker_examtime_<%= i %>.pid
+  if mem > <%= @max_mem %> MB for 2 cycles then exec "/bin/bash -c '/bin/kill -6 `cat /var/run/engineyard/unicorn_worker_examtime_<%= i %>.pid` && sleep 1'"
+  group unicorn_examtime
+
+<% end %>
