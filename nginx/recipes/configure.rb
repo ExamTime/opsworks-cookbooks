@@ -80,8 +80,7 @@ template "#{config_path}/examtime.conf" do
   mode 0644
   source ""
   variables({
-    :custom_path => #{config_path}/#{app_name},
-     
+    :custom_path => #{config_path}/#{app_name}     
             })
 end
 
