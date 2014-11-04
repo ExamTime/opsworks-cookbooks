@@ -79,7 +79,7 @@ template "#{config_path}/examtime.conf" do
 #  group deploy[:group]
   owner node[:nginx][:user]
   mode 0644
-  source ""
+  source "app.erb"
   variables(
     :custom_path => "#{config_path}/#{app_name}"
      )
