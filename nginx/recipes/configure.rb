@@ -2,7 +2,7 @@ include_recipe "nginx::service"
 
 config_path="/etc/nginx/conf.d"
 #if %( app_master app solo ).include?(node[:instance_role])
-app_name = node[:opsworks][:applications][:name]
+app_name = node[:deploy]['demo'][:application]
 
 directory "#{config_path}/#{app_name}" do
   mode 0755
