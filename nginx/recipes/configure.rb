@@ -16,7 +16,7 @@ template "#{config_path}/#{app_name}/custom.conf" do
   source "custom.erb"
 #  if node[:environment][:name]!='production'
   if node[:deploy][:application]!='production'
-    variables({
+    variables(
         :allowed_ips => 'satisfy any;
 allow 54.192.0.0/16; 
 allow 54.230.0.0/16; 
@@ -36,8 +36,8 @@ allow 216.137.32.0/19;
 deny all;',
 
         :auth_basic => 'auth_basic "ExamTime integration - Company Confidential - this site is restricted to ExamTime staff only";',
-	:auth_basic_user_file => "auth_basic_user_file /data/nginx/servers/examtime/examtime.users;",
-      })
+	:auth_basic_user_file => "auth_basic_user_file /data/nginx/servers/examtime/examtime.users;"
+      )
     end
   end
 
@@ -48,7 +48,7 @@ template "#{config_path}/#{app_name}/custom.ssl.conf" do
   source "custom.erb"
 #    if node[:environment][:name]!='production'
   if node[:deploy][:application]!='production'
-    variables({
+    variables(
       :allowed_ips => 'satisfy any; 
 allow 54.192.0.0/16; 
 allow 54.230.0.0/16; 
@@ -67,8 +67,8 @@ allow 205.251.254.0/24;
 allow 216.137.32.0/19; 
 deny all;',
       :auth_basic => 'auth_basic "ExamTime integration - Company Confidential - this site is restricted to ExamTime staff only";',
-      :auth_basic_user_file => "auth_basic_user_file /data/nginx/conf.d/examtime.users;",
-      })
+      :auth_basic_user_file => "auth_basic_user_file /data/nginx/conf.d/examtime.users;"
+      )
   end
 end
 
@@ -79,9 +79,9 @@ template "#{config_path}/examtime.conf" do
   owner node[:nginx][:user]
   mode 0644
   source ""
-  variables({
+  variables(
     :custom_path => #{config_path}/#{app_name}     
-            })
+            )
 end
 
 
