@@ -21,6 +21,8 @@ end
 
 if node[:opsworks][:instance][:layers].include?("#{deploy[:application_type]}-app")
 
+  app_dir="/srv/www/#{application_name}"
+
 #node[:applications].each do |app_name, data|
   Chef::Log.info "Apply custom configuration for unicorn on #{application_name}"
 
@@ -31,7 +33,7 @@ if node[:opsworks][:instance][:layers].include?("#{deploy[:application_type]}-ap
     action :nothing
   end
 
-  template "/srv/www/#{application_name}/shared/config/unicorn_custom.rb" do
+  template "#{app_dir}/shared/config/unicorn_custom.rb" do
     owner = node[:opsworks][:deploy_user][:user] || 'deploy'
     group = node[:opsworks][:deploy_user][:group] || 'www-data'
    # owner node[:owner_name]
@@ -41,6 +43,7 @@ if node[:opsworks][:instance][:layers].include?("#{deploy[:application_type]}-ap
     notifies :run, resources(:execute => "restart unicorn")
     variables({
                 :app_name => app_name,
+                :app_dir => app_dir,
                 :workers_count => ExamTimeWebWorkersStrategy.workers_count(node)
               })
   end

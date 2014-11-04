@@ -20,7 +20,7 @@ worker_processes <%= @workers_count %>
 #   listen "127.0.0.1:3000"  # listen to port 3000 on the loopback interface
 #   listen "/tmp/.unicorn.sock" # listen on the given Unix domain socket
 #   listen "[::1]:3000" # listen to port 3000 on the IPv6 loopback interface
-listen '/var/run/engineyard/unicorn_examtime.sock', :backlog => 1024
+listen '/var/run/unicorn_examtime.sock', :backlog => 1024
 
 # sets the timeout of worker processes to +seconds+.  Workers
 # handling the request/app.call/response cycle taking longer than
@@ -32,7 +32,7 @@ listen '/var/run/engineyard/unicorn_examtime.sock', :backlog => 1024
 timeout 180
 
 # sets the +path+ for the PID file of the unicorn master process
-pid "/var/run/engineyard/unicorn_examtime.pid"
+pid "/var/run/unicorn_examtime.pid"
 
 # The default Logger will log its output to the path specified
 # by +stderr_path+.  If you're running Unicorn daemonized, then

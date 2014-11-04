@@ -3,7 +3,13 @@ include_recipe "nginx::service"
 config_path="/etc/nginx/conf.d"
 #if %( app_master app solo ).include?(node[:instance_role])
 
-template "#{config_path}/custom.conf" do
+directory "#{config_path}/#{app_name}" do
+  mode 0755
+  owner node[:nginx][:user]
+  action :create
+end
+ 
+template "#{config_path}/#{app_name}/custom.conf" do
 #  owner deploy[:user]
 #  group deploy[:group]
   mode 0644
@@ -35,7 +41,7 @@ deny all;',
     end
   end
 
-template "#{config_path}/custom.ssl.conf" do
+template "#{config_path}/#{app_name}/custom.ssl.conf" do
 #  owner deploy[:user]
 #  group deploy[:group]
   mode 0644
@@ -66,15 +72,19 @@ deny all;',
   end
 end
 
-# template "#{config_path}/examtime.conf" do
-# #  owner deploy[:user]
-# #  group deploy[:group]
-#   mode 0644
-#   source ""
-#   variables({
-#     :
-#             })
-# end
+
+template "#{config_path}/examtime.conf" do
+#  owner deploy[:user]
+#  group deploy[:group]
+  owner node[:nginx][:user]
+  mode 0644
+  source ""
+  variables({
+    :custom_path => #{config_path}/#{app_name},
+     
+            })
+end
+
 
 # template "#{config_path}/examtimessl.conf" do
 # #  owner deploy[:user]

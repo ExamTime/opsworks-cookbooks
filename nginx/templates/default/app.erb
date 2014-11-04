@@ -1,0 +1,65 @@
+# Review http://wiki.nginx.org/HttpUpstreamModule for more Documentation
+upstream upstream_examtime {
+  server unix:/var/run/unicorn_examtime.sock fail_timeout=0;
+}
+
+# Directive assigns configuration for the virtual server.
+server {
+# The listen directive specifies the address and port accepted by the enclosing server {...} block. It is possible to specify only an address, only a port, or a server name as the address.
+  listen 80;
+
+  #
+  # Server Names
+  #
+  # This is the list of IP's and/or domain names with any wildcards or
+  # subdomains. The special value '_' is used to match all domains and IPs and
+  # generally denotes the default server for the entire Nginx process.
+  #
+  # Note that if you specify any domains with wild cards, the very first domain
+  # listed must be without a wild card. For example:
+  #
+  # server_name www.mydomain.org *.mydomain.org;
+  #
+  # It is good practice to include wildcard subdomains so that Nginx will not
+  # require a restart when new services are added for an application.
+  #
+  server_name _;
+
+  #
+  # The application root which is inherited for all location blocks below.
+  #
+  root <%= @application[:absolute_document_root] %>;
+  
+  access_log  <%= node[:nginx][:log_dir] %>/<%= @application[:domains].first %>.access.log;
+
+  error_log <%= node[:nginx][:log_dir] %>/<%= @application[:domains].first %>.error.log;
+  # error_log /dev/null notice;
+
+  #include /etc/nginx/common/servers.conf;
+
+  # Location for the Upstream (a/k/a Unicorn or Mongrel)
+  location @app_examtime {
+  include /etc/nginx/conf.d/proxy.conf;
+  proxy_pass http://upstream_examtime;
+  }
+
+
+  # set Expire header on assets: see http://developer.yahoo.com/performance/rules.html#expires
+  location ~ ^/(images|assets|javascripts|stylesheets)/ {
+  try_files  $uri $uri/index.html /last_assets/$uri /last_assets/$uri.html @app_examtime;
+  expires 10y;
+  }  
+
+  location / {
+  if (-f $document_root/system/maintenance.html) { return 503; }
+    # auth is disabled for this server
+    # auth_basic            "Restricted";
+    # auth_basic_user_file  /etc/nginx/servers/examtime.users;
+  try_files  $uri $uri/index.html $uri.html @app_examtime;
+  }
+  
+  location = /500.html {
+    root <%= @application[:absolute_document_root] %>;
+  }
+  include <% @custom_path %>/custom.conf;
+}
