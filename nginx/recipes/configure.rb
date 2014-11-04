@@ -1,6 +1,6 @@
 include_recipe "nginx::service"
 
-deploy = params[:deploy_data]
+deploy = node[:deploy]
 app_name = params[:app]
 
 
