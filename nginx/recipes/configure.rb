@@ -1,5 +1,9 @@
 include_recipe "nginx::service"
 
+deploy = params[:deploy_data]
+app_name = params[:app]
+
+
 config_path="/etc/nginx/conf.d"
 #if %( app_master app solo ).include?(node[:instance_role])
 app_name = node[:deploy]['demo'][:application]
@@ -81,6 +85,8 @@ template "#{config_path}/examtime.conf" do
   mode 0644
   source "app.erb"
   variables(
+    :deploy => deploy,
+    :application => app_name,
     :custom_path => "#{config_path}/#{app_name}"
      )
 end
