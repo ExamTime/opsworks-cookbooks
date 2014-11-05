@@ -59,7 +59,7 @@ server {
   }
   
   location = /500.html {
-    root <%= @application[:absolute_document_root] %>;
+    root <%= @deploy[:absolute_document_root] %>;
   }
-  include <% @custom_path %>/custom.conf;
+  include <% @deploy[:custom_path] %>/custom.conf;
 }
