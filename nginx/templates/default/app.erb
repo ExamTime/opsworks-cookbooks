@@ -30,9 +30,9 @@ server {
   #
   root <%= @deploy[:deploy_to] %>/current;
   
-  access_log  <%= node[:nginx][:log_dir] %>/<%= @application[:domains].first %>.access.log;
+  access_log  /var/log/nginx/<%= @application %>.access.log;
 
-  error_log <%= node[:nginx][:log_dir] %>/<%= @application[:domains].first %>.error.log;
+  error_log /var/log/nginx/<%= @application %>.error.log;
   # error_log /dev/null notice;
 
   #include /etc/nginx/common/servers.conf;
