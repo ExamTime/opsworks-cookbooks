@@ -20,16 +20,18 @@ end
 
 
 if node[:opsworks][:instance][:layers].include?("#{deploy[:application_type]}-app")
-
-  app_dir="/srv/www/#{application_name}"
+ 
+  deploy = node[:deploy]
+  app_name = params[:app]
+  app_dir="/srv/www/#{app_name}"
 
 #node[:applications].each do |app_name, data|
-  Chef::Log.info "Apply custom configuration for unicorn on #{application_name}"
+  Chef::Log.info "Apply custom configuration for unicorn on #{app_name}"
 
   #if ['app', 'app_master', 'solo'].include? node[:instance_role]
 
   execute "restart unicorn" do
-    command "monit restart unicorn_master_#{application_name}"
+    command "monit restart unicorn_master_#{app_name}"
     action :nothing
   end
 
@@ -48,7 +50,7 @@ if node[:opsworks][:instance][:layers].include?("#{deploy[:application_type]}-ap
               })
   end
 
-  template "/srv/www/#{application_name}/shared/config/env.custom" do
+  template "#{app_dir}/#{app_name}/shared/config/env.custom" do
     owner = node[:opsworks][:deploy_user][:user] || 'deploy'
     group = node[:opsworks][:deploy_user][:group] || 'www-data'
 #    owner node[:owner_name]
@@ -57,11 +59,11 @@ if node[:opsworks][:instance][:layers].include?("#{deploy[:application_type]}-ap
     source "env_custom.erb"
     notifies :run, resources(:execute => "restart unicorn")
     variables({
-                :app_name => app_name,
-        :max_times { |n|  }e => 720
+        :app_dir => app_dir,
+        :max_time => 720
               })
   end
-  template "/etc/monit.d/unicorn_#{application_name}.monitrc" do
+  template "/etc/monit.d/unicorn_#{app_name}.monitrc" do
     owner = node[:opsworks][:deploy_user][:user] || 'deploy'
     group = node[:opsworks][:deploy_user][:group] || 'www-data'
 #   owner node[:owner_name]
@@ -75,6 +77,19 @@ if node[:opsworks][:instance][:layers].include?("#{deploy[:application_type]}-ap
               })
   end
   
+#   template "/usr/local/bin/app_#{app_name}" do
+#     owner = node[:opsworks][:deploy_user][:user] || 'deploy'
+#     group = node[:opsworks][:deploy_user][:group] || 'www-data'
+# #   owner node[:owner_name]
+#  #   group node[:owner_name]
+#     mode 0644
+#     source "app_examtime.erb"
+# #    notifies :run, resources(:execute => "restart unicorn")
+#     variables({
+#                 :app_name => app_name,
+#                 :max_mem => '350'
+#               })
+#   end
   
   
   Chef::Log.info "Applied custom unicorn config to #{node[:instance_role]} instance"
