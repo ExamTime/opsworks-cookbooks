@@ -1,5 +1,5 @@
 check process unicorn_master_examtime
-  with pidfile /var/run/engineyard/unicorn_examtime.pid
+  with pidfile /var/run/unicorn_examtime.pid
   start program = "/bin/bash -c '/engineyard/bin/app_examtime start'"
     as uid deploy and gid deploy
     stop program = "/bin/bash -c '/engineyard/bin/app_examtime stop'"

@@ -19,11 +19,13 @@ class ExamTimeWebWorkersStrategy
 end
 
 
+deploy = node[:deploy]
+app_name = params[:app]
+app_dir="/srv/www/#{app_name}"
+
+
 if node[:opsworks][:instance][:layers].include?("#{deploy[:application_type]}-app")
  
-  deploy = node[:deploy]
-  app_name = params[:app]
-  app_dir="/srv/www/#{app_name}"
 
 #node[:applications].each do |app_name, data|
   Chef::Log.info "Apply custom configuration for unicorn on #{app_name}"
