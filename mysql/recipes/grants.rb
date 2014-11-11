@@ -1,6 +1,6 @@
 include_recipe 'deploy'
 
-
+deploy = params[:deploy]
 
 node[:deploy].each do |application, deploy|
 
