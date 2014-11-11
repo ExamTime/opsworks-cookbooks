@@ -1,3 +1,4 @@
+include_recipe 'deploy'
 
 mysql_command = "/usr/bin/mysql -uroot -p#{node[:mysql][:server_root_password]}"
 
