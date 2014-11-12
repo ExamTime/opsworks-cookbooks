@@ -1,6 +1,3 @@
-include_recipe 'mysql'
-
-
 
 node[:deploy].each do |application, deploy|
   puts deploy
