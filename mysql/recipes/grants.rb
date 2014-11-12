@@ -10,7 +10,7 @@ node[:deploy].each do |application, deploy|
   pass=deploy[:database][:password]
 
   execute "grant privileges to deploy user" do
-    command "#{mysql_command} -e 'GRANT ALL PRIVILEGES on #{db}.* to #{user}@`%` identified by `#{password}` ' " 
+    command "#{mysql_command} -e 'GRANT ALL PRIVILEGES on #{db}.* to #{user}@`%` identified by `#{password}` aaaaaaaaa ' " 
 
 #`#{deploy[:database][:database]}`.* to #{deploy[:database][:username]}@`%` identified by "#{deploy[:database][:password]}" ' "
     action :run
