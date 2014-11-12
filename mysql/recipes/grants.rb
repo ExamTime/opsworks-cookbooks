@@ -1,7 +1,7 @@
-
 node[:deploy].each do |application, deploy|
-  puts deploy
+  
   mysql_command = "/usr/bin/mysql -uroot -p#{node[:mysql][:server_root_password]}"
+  
   db=deploy[:database][:database]
   user=deploy[:database][:username]
   pass=deploy[:database][:password]
